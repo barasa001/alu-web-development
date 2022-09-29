@@ -1,1 +1,192 @@
-
+header {
+    display: flex;
+    flex-direction: row;
+    flex: auto;
+    background-image: url("./imgs/banner.png");
+    padding: 2% 5% 2% 5%;
+    filter: grayscale(100%);
+    position: absolute;
+    left: -0.025%;
+    right: -0.025%;
+    top: 0%;
+    bottom: -26.48%;
+  }
+  header .logo {
+    flex: 2;
+    z-index: 1;
+  }
+  header .icons {
+    flex: 4;
+    font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15px;
+    text-transform: uppercase;
+    z-index: 1;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  header .icons a {
+    margin-left: 1%;
+    margin-right: 1%;
+    text-decoration: none;
+    color: white;
+  }
+  .first {
+    /* position: absolute; */
+    left: 20%;
+    right: 20%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -2.6rem;
+  }
+  .second {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5rem;
+  }
+  .second-heading {
+    height: 151px;
+    font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 120px;
+    line-height: 151px;
+    text-align: center;
+    color: #ffffff;
+  }
+  .second-words {
+    height: 20px;
+    position: relative;
+    margin-top: -7%;
+    text-align: center;
+    font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    margin-left: 38%;
+    margin-right: 38%;
+  }
+  .mybutton {
+    background: #c271ff;
+    border-radius: 25px;
+    border: none;
+    padding: 0.7rem;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    align-self: center;
+    margin: 2rem;
+    padding: 1rem;
+  }
+  .third {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+  }
+  .fourth {
+    position: relative;
+    align-self: center;
+    padding: 2rem;
+  }
+  .fifth {
+    color: #c271ff;}
+    .sixth {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .seven {
+        width: 22%;
+        padding: 1.5% 4% 1.5% 4%;
+        margin: 1.5%;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+      }
+      main {
+        position: relative;
+      
+      }
+      .quote {
+        
+        background-color: #c271ff;
+        padding: 6%;
+        margin: -8px;
+      }
+      .quoteone {
+        display: flex;
+        flex-direction: row;
+      }
+      .mywork {
+        display: flex;
+        flex-direction: column;
+      }
+      .videos-section h1,
+.mywork h1,
+.faq-section h1 {
+  text-align: center;
+}
+.nine {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .ten {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    max-width: 15%;
+  }
+  .ten .author {
+    display: flex;
+  }
+  .eleven {
+    display: flex;
+    justify-content: center;
+  }
+  .elevenone {
+    display: flex;
+    flex-direction: column;
+    max-width: 12%;
+  }
+  .faqone {
+    display: flex;
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+  .faqtwo {
+    display: flex;
+    flex: 50%;
+    flex-direction: column;
+    width: 50%;
+    padding: 5%;
+  }
+  footer {
+    background: black;
+    padding: 5rem;
+  }
+  .last {
+    display: flex;
+    flex-direction: column;
+  }
+  .lastone {
+    display: flex;
+  }
+  .lastone img {
+    flex: 1;
+  }
+  .lastone div {
+    flex: 8;
+  }
+  .last p {
+    color: white;
+    text-align: center;
+  }

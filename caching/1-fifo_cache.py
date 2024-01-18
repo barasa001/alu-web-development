@@ -40,18 +40,22 @@ class FIFOCache(BaseCaching):
         super().__init__()
 
     def put(self, key, item):
-        ''' Add key/value pair to cache data.
-            If cache is at max capacity (specified by BaseCaching.MAX_ITEMS),
-            discard oldest entry in cache to accommodate new entry. '''
-        if key is not None and item is not None:
-            self.cache_data[key] = item
-            if key not in self.keys:
-                self.keys.append(key)
-            if len(self.keys) > BaseCaching.MAX_ITEMS:
-                discard = self.keys.pop(0)
-                del self.cache_data[discard]
-                print('DISCARD: {:s}'.format(discard))
+        """
+            modify cache data
 
+            Args:
+                key: of the dict
+                item: value of the key
+        """
+        if key or item is not None:
+            valuecache = self.get(key)
+            if valuecache is None:
+                if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                    keydel = list(self.cache_data.keys())[0]
+                    del self.cache_data[keydel]
+                    print("DISCARD: {}".format(keydel))
+
+            self.cache_data[key] = item
     def get(self, key):
         """
             modify cache data

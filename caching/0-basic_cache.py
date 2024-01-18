@@ -23,10 +23,8 @@ class BasicCache(BaseCaching):
     """
 
     def put(self, key, item):
-        ''' Add key/value pair to cache.
-        If either `key` or `item` is None, do nothing. '''
-        if key is not None and item is not None:
-            self.cache_data[key] = item
+        ''' self descriptive '''
+        if key and item:
             self.cache_data[key] = item
 
     def get(self, key):

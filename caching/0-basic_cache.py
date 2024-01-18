@@ -23,14 +23,10 @@ class BasicCache(BaseCaching):
     """
 
     def put(self, key, item):
-        """
-            modify cache data
-
-            Args:
-                key: of the dict
-                item: value of the key
-        """
-        if key or item is not None:
+        ''' Add key/value pair to cache.
+        If either `key` or `item` is None, do nothing. '''
+        if key is not None and item is not None:
+            self.cache_data[key] = item
             self.cache_data[key] = item
 
     def get(self, key):

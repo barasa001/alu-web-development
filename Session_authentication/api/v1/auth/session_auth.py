@@ -1,119 +1,45 @@
 #!/usr/bin/env python3
 """
-Route module for the API
+Session Authentication
 """
-from os import getenv
-from api.v1.views import app_views
-from flask import Flask, jsonify, abort, request
-from flask_cors import (CORS, cross_origin)
-import os
-from os import getenv
+from typing import Dict
+from flask.globals import session
+from api.v1.auth.auth import Auth
+from models.user import User
+import uuid
 
 
-app = Flask(__name__)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-app.register_blueprint(app_views)
-CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
-auth = None
-AUTH_TYPE = os.getenv("AUTH_TYPE")
-AUTH_TYPE = getenv("AUTH_TYPE")
+class SessionAuth(Auth):
+    """ Session class inherits Auth """
+    user_id_by_session_id: Dict[str, str] = {}
 
-if AUTH_TYPE == "auth":
-    from api.v1.auth.auth import Auth
-    auth = Auth()
-elif AUTH_TYPE == "basic_auth":
-    from api.v1.auth.basic_auth import BasicAuth
-    auth = BasicAuth()
-elif AUTH_TYPE == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
-    auth = SessionAuth()
-elif AUTH_TYPE == "session_exp_auth":
-    from api.v1.auth.session_exp_auth import SessionExpAuth
-    auth = SessionExpAuth()
-elif AUTH_TYPE == "session_db_auth":
-    from api.v1.auth.session_db_auth import SessionDBAuth
-    auth = SessionDBAuth()
+    def create_session(self, user_id: str = None) -> str:
+        """ Session ID Generator """
+        if user_id is None or not isinstance(user_id, str):
+            return None
+        session_id = str(uuid.uuid4())
+        self.user_id_by_session_id[session_id] = user_id
+        return session_id
 
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """ Returns session id based on user id """
+        if session_id is None or not isinstance(session_id, str):
+            return None
+        return self.user_id_by_session_id.get(session_id, None)
 
-@app.before_request
-def bef_req():
-    """
-    Filter each request before it's handled by the proper route
-    """
-    if auth is None:
-        pass
-    else:
-        setattr(request, "current_user", auth.current_user(request))
-        excluded = [
-            '/api/v1/status/',
-            '/api/v1/unauthorized/',
-            '/api/v1/forbidden/',
-            '/api/v1/auth_session/login/'
-        ]
-        if auth.require_auth(request.path, excluded):
-            cookie = auth.session_cookie(request)
-            if auth.authorization_header(request) is None and cookie is None:
-                abort(401, description="Unauthorized")
-            if auth.current_user(request) is None:
-                abort(403, description="Forbidden")
+    def current_user(self, request=None):
+        """ Returns User based cookie value """
+        cookie = self.session_cookie(request)
+        session_user_id = self.user_id_for_session_id(cookie)
+        user_id = User.get(session_user_id)
+        return user_id
 
-
-@app.errorhandler(404)
-@ app.errorhandler(404)
-def not_found(error) -> str:
-    """ Not found handler
-    """
-    return jsonify({"error": "Not found"}), 404
-
-
-@app.errorhandler(401)
-def unauthorized(error) -> str:
-    """ Request unauthorized handler
-@ app.errorhandler(401)
-def unauthorized_error(error) -> str:
-    """ Unauthorized handler
-    """
-    return jsonify({"error": "Unauthorized"}), 401
-
-
-@app.errorhandler(403)
-def forbidden(error) -> str:
-    """ Request unauthorized handler
-@ app.errorhandler(403)
-def forbidden_error(error) -> str:
-    """ Forbidden handler
-    """
-    return jsonify({"error": "Forbidden"}), 403
-
-
-@ app.before_request
-def before_request() -> str:
-    """ Before Request Handler
-    Requests Validation
-    """
-    if auth is None:
-        return
-
-    excluded_paths = ['/api/v1/status/',
-                      '/api/v1/unauthorized/',
-                      '/api/v1/forbidden/',
-                      '/api/v1/auth_session/login/']
-
-    if not auth.require_auth(request.path, excluded_paths):
-        return
-
-    if auth.authorization_header(request) is None \
-            and auth.session_cookie(request) is None:
-        abort(401)
-
-    current_user = auth.current_user(request)
-    if current_user is None:
-        abort(403)
-
-    request.current_user = current_user
-
-
-if __name__ == "__main__":
-    host = getenv("API_HOST", "0.0.0.0")
-    port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    def destroy_session(self, request=None):
+        """ Deletes user session / login(out) """
+        cookie_data = self.session_cookie(request)
+        if cookie_data is None:
+            return False
+        if not self.user_id_for_session_id(cookie_data):
+            return False
+        del self.user_id_by_session_id[cookie_data]
+        return True
